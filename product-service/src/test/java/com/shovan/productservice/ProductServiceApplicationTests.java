@@ -38,7 +38,7 @@ class ProductServiceApplicationTests {
 	static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
 		dynamicPropertyRegistry.add("spring.data.mongo.uri", mongoDBContainer::getReplicaSetUrl);
 	}
-
+/////JUST  TO CHECK THE PUT OPERATION TEST
 	@Test
 	void shouldCreateProduct() throws Exception {
 
