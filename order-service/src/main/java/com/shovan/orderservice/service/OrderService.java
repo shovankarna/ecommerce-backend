@@ -15,6 +15,9 @@ import com.shovan.orderservice.dto.OrderLineItemsDto;
 import com.shovan.orderservice.dto.OrderRequest;
 import com.shovan.orderservice.model.OrderLineItems;
 import com.shovan.orderservice.repository.OrderRepository;
+
+import jakarta.annotation.PostConstruct;
+
 import com.shovan.orderservice.model.Order;
 
 @Service
@@ -28,6 +31,11 @@ public class OrderService {
     private WebClient.Builder webClientBuilder;
 
     private WebClient webClient;
+
+    @PostConstruct
+    public void init() {
+        this.webClient = webClientBuilder.build();
+    }
 
     public void placeOrder(OrderRequest orderRequest) {
 
@@ -47,10 +55,11 @@ public class OrderService {
                 .uri("http://localhost:8082/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
-                .bodyToMono(InventoryResponse[].class) // Replace InventoryResponse with the actual class representing the response
+                .bodyToMono(InventoryResponse[].class) // Replace InventoryResponse with the actual class representing
+                                                       // the response
                 .block();
 
-            boolean allProductsInStock = Arrays.stream(inventoryResponsesArray).allMatch(InventoryResponse::isInStock);
+        boolean allProductsInStock = Arrays.stream(inventoryResponsesArray).allMatch(InventoryResponse::isInStock);
 
         if (allProductsInStock) {
             orderRepository.save(order);
